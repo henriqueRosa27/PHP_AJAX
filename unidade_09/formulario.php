@@ -4,15 +4,24 @@
     if ( mysqli_connect_errno()  ) {
         die("Conexao falhou: " . mysqli_connect_errno());
     }
-
+    //verfica se recebeu alguma id
+    if(isset($_GET["codigo"])){
+        $id = $_GET["codigo"];
+        $tr = "SELECT * FROM transportadoras ";
+        $tr .= "WHERE transportadoraID = {$id} ";
+    }
+    //caso não receba redireciona o usuario para a pagina para selecionar
+    else{
+        header("location:list.php");
+    }
     // Consulta a tabela de transportadoras
-    $tr = "SELECT * FROM transportadoras ";
+    /*$tr = "SELECT * FROM transportadoras ";
     if(isset($_GET["codigo"]) ) {
         $id = $_GET["codigo"];
         $tr .= "WHERE transportadoraID = {$id} ";
     } else {
         $tr .= "WHERE transportadoraID = 1 ";
-    }
+    }*/
 
     // cria objeto com dados da transportadora
     $con_transportadora = mysqli_query($conecta,$tr);
@@ -96,7 +105,26 @@
             });
             
             function alterarFormulario(dados) {
+                $.ajax({
+                    type: "POST",
+                    data: dados.serialize(),
+                    url: "alterar_transportadora.php",
+                    async: false
+                }).done(function(data){
+                    $sucesso = $.parseJSON(data)["sucesso"];
+                    $mensagem = $.parseJSON(data)["mensagem"];
 
+                    if($sucesso){
+                        $('#mensagem p').html($mensagem);
+                    }
+                    else{
+                        $('#mensagem p').html($mensagem);
+                    }
+                }).fail(function(){
+                    $('#mensagem p').html("Erro no sistem");
+                }).always(function(){
+                    $('#mensagem').show();
+                });
             }
         </script>
     </body>
