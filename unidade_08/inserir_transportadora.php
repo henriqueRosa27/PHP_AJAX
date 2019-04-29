@@ -13,6 +13,23 @@
         $inserir    = "INSERT INTO transportadoras ";
         $inserir    .= "(nometransportadora,endereco,cidade,estadoID) ";
         $inserir    .= "VALUES ";
-        $inserir    .= "('$nome','$endereco','$cidade', $estado)";        
+        $inserir    .= "('$nome','$endereco','$cidade', $estado)";
+        
+        $operacaoInsercao = mysqli_query($conecta, $inserir);
+
+        $retorno = array();
+        if($operacaoInsercao){
+            $retorno["resultado"] = true;
+            $retorno["mensagem"] = "Transportadora inserido com sucesso";
+        }
+        else{
+            $retorno["resultado"] = false;
+            $retorno["mensagem"] = "Falha na inserção";
+        }
+
+        echo json_encode($retorno);
+    }
+    else{
+        header("location:formulario.php");
     }
 ?>
